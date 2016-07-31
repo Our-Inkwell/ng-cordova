@@ -4465,11 +4465,11 @@ angular.module('ngCordova.plugins.healthKit', [])
        * Sample any kind of health data through a given date range.
        * sampleQuery of the format:
        {
-									'startDate': yesterday, // mandatory
-									'endDate': tomorrow, // mandatory
-									'sampleType': 'HKQuantityTypeIdentifierHeight',
-									'unit' : 'cm'
-							},
+                  'startDate': yesterday, // mandatory
+                  'endDate': tomorrow, // mandatory
+                  'sampleType': 'HKQuantityTypeIdentifierHeight',
+                  'unit' : 'cm'
+              },
        */
       querySampleType: function (sampleQuery) {
         var q = $q.defer();
@@ -4949,7 +4949,7 @@ angular.module('ngCordova.plugins.launchNavigator', [])
           function (error){
             q.reject(error);
           },
-		  options);
+      options);
         return q.promise;
       }
     };
@@ -5742,6 +5742,7 @@ angular.module('ngCordova.plugins', [
   'ngCordova.plugins.touchid',
   'ngCordova.plugins.vibration',
   'ngCordova.plugins.videoCapturePlus',
+  'ngCordova.plugins.wifiWizard',
   'ngCordova.plugins.zip',
   'ngCordova.plugins.insomnia'
 ]);
@@ -6032,33 +6033,33 @@ angular.module('ngCordova.plugins.preferences', [])
      return {
          
          pluginNotEnabledMessage: 'Plugin not enabled',
-    	
-    	/**
-    	 * Decorate the promise object.
-    	 * @param promise The promise object.
-    	 */
-    	decoratePromise: function (promise){
-    		promise.success = function (fn) {
-	            promise.then(fn);
-	            return promise;
-	        };
+      
+      /**
+       * Decorate the promise object.
+       * @param promise The promise object.
+       */
+      decoratePromise: function (promise){
+        promise.success = function (fn) {
+              promise.then(fn);
+              return promise;
+          };
 
-	        promise.error = function (fn) {
-	            promise.then(null, fn);
-	            return promise;
-	        };
-    	},
-    	
-    	/**
-    	 * Store the value of the given dictionary and key.
-    	 * @param key The key of the preference.
-    	 * @param value The value to set.
+          promise.error = function (fn) {
+              promise.then(null, fn);
+              return promise;
+          };
+      },
+      
+      /**
+       * Store the value of the given dictionary and key.
+       * @param key The key of the preference.
+       * @param value The value to set.
          * @param dict The dictionary. It's optional.
          * @returns Returns a promise.
-    	 */
-	    store: function (key, value, dict) {
-	    	var deferred = $q.defer();
-	    	var promise = deferred.promise;
+       */
+      store: function (key, value, dict) {
+        var deferred = $q.defer();
+        var promise = deferred.promise;
             
             function ok(value){
                 deferred.resolve(value);
@@ -6081,19 +6082,19 @@ angular.module('ngCordova.plugins.preferences', [])
                 deferred.reject(new Error(this.pluginNotEnabledMessage));
             }
             
-	    	this.decoratePromise(promise);
-	    	return promise;
-	    },
-	    
-	    /**
-	     * Fetch the value by the given dictionary and key.
-	     * @param key The key of the preference to retrieve.
+        this.decoratePromise(promise);
+        return promise;
+      },
+      
+      /**
+       * Fetch the value by the given dictionary and key.
+       * @param key The key of the preference to retrieve.
          * @param dict The dictionary. It's optional.
          * @returns Returns a promise.
-	     */
-	    fetch: function (key, dict) {
-	    	var deferred = $q.defer();
-	    	var promise = deferred.promise;
+       */
+      fetch: function (key, dict) {
+        var deferred = $q.defer();
+        var promise = deferred.promise;
             
             function ok(value){
                 deferred.resolve(value);
@@ -6115,19 +6116,19 @@ angular.module('ngCordova.plugins.preferences', [])
                 deferred.reject(new Error(this.pluginNotEnabledMessage));
             }
             
-	    	this.decoratePromise(promise);
-	    	return promise;
-	    },
+        this.decoratePromise(promise);
+        return promise;
+      },
         
         /**
-	     * Remove the value by the given key.
-	     * @param key The key of the preference to retrieve.
+       * Remove the value by the given key.
+       * @param key The key of the preference to retrieve.
          * @param dict The dictionary. It's optional.
          * @returns Returns a promise.
-	     */
-	    remove: function (key, dict) {
-	    	var deferred = $q.defer();
-	    	var promise = deferred.promise;
+       */
+      remove: function (key, dict) {
+        var deferred = $q.defer();
+        var promise = deferred.promise;
             
             function ok(value){
                 deferred.resolve(value);
@@ -6148,18 +6149,18 @@ angular.module('ngCordova.plugins.preferences', [])
             } else {
                 deferred.reject(new Error(this.pluginNotEnabledMessage));
             }
-	    	
-	    	this.decoratePromise(promise);
-	    	return promise;
-	    },
+        
+        this.decoratePromise(promise);
+        return promise;
+      },
         
         /**
-	     * Show the application preferences.
+       * Show the application preferences.
          * @returns Returns a promise.
-	     */
-	    show: function () {
-	    	var deferred = $q.defer();
-	    	var promise = deferred.promise;
+       */
+      show: function () {
+        var deferred = $q.defer();
+        var promise = deferred.promise;
             
             function ok(value){
                 deferred.resolve(value);
@@ -6175,10 +6176,10 @@ angular.module('ngCordova.plugins.preferences', [])
             } else {
                 deferred.reject(new Error(this.pluginNotEnabledMessage));
             }
-	    	
-	    	this.decoratePromise(promise);
-	    	return promise;
-	    }
+        
+        this.decoratePromise(promise);
+        return promise;
+      }
     };
 
   }]);
@@ -7331,6 +7332,135 @@ angular.module('ngCordova.plugins.videoCapturePlus', [])
       };
     }];
   }]);
+
+
+// install  :   cordova plugin add com.pylonproducts.wifiwizard
+// link     :   https://www.github.com/parsonsmatt/wifiwizard
+
+angular.module('ngCordova.plugins.wifiWizard', [])
+    .factory('$cordovaWifiWizard', [ '$q', '$window', function ($q, $window) {
+      return {
+        formatWifiConfig: function(SSID, password, algorithm) {
+          return WifiWizard.formatWifiConfig(SSID, password, algorithm);
+        },
+
+        formatWPAConfig: function(SSID, password) {
+          return WifiWizard.formatWPAConfig(SSID, password);
+        },
+
+        addNetwork: function(wifi) {
+          var d = $q.defer();
+          WifiWizard.addNetwork(wifi,
+            function(message) {
+              d.resolve(message);
+            }, function(error) {
+              d.reject(error);
+            }
+          );
+
+          return d.promise;
+        },
+
+        removeNetwork: function(ssid) {
+          var d = $q.defer();
+
+          WifiWizard.removeNetwork(ssid,
+            function(message) {
+              d.resolve(message);
+            }, function(error) {
+              d.reject(error);
+            }
+          );
+
+          return d.promise;
+        },
+
+        connectNetwork: function(ssid) {
+          var d = $q.defer();
+
+          WifiWizard.connectNetwork(ssid,
+            function(message) {
+              d.resolve(message);
+            }, function(error) {
+              d.reject(error);
+            }
+          );
+
+          return d.promise;
+        },
+
+        disconnectNetwork: function(ssid) {
+          var d = $q.defer();
+
+          WifiWizard.disconnectNetwork(ssid,
+            function(message) {
+              d.resolve(message);
+            }, function(error) {
+              d.reject(error);
+            }
+          );
+
+          return d.promise;
+        },
+
+        listNetworks: function() {
+          var d = $q.defer();
+
+          WifiWizard.disconnectNetwork(
+            function(message) {
+              d.resolve(message);
+            }, function(error) {
+              d.reject(error);
+            }
+          );
+
+          return d.promise;
+        },
+
+        getScanResults: function() {
+          var d = $q.defer();
+
+          WifiWizard.getScanResults(
+            function(message) {
+              d.resolve(message);
+            }, function(error) {
+              d.reject(error);
+            }
+          );
+
+          return d.promise;
+        },
+
+        startScan: function() {
+          var d = $q.defer();
+
+          WifiWizard.startScan(
+            function(message) {
+              d.resolve(message);
+            }, function(error) {
+              d.reject(error);
+            }
+          );
+
+          return d.promise;
+        },
+
+        disconnect: function() {
+          var d = $q.defer();
+
+          WifiWizard.disconnect(
+            function(message) {
+              d.resolve(message);
+            }, function(error) {
+              d.reject(error);
+            }
+          );
+
+          return d.promise;
+        }
+      }
+    }]);
+
 
 // install  :     cordova plugin add https://github.com/MobileChromeApps/zip.git
 // link     :     https://github.com/MobileChromeApps/zip
